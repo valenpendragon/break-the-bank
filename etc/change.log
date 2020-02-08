@@ -1,3 +1,5 @@
 2020-02-08 02;20: Added GPLv3 license to main directory and etc. Started change.log. Added directories: etc (misc files including full licenses and logs), docs (documentation), graphics (for graphics and icons), and lib (stores libraries, modules, and packages).
 
 2020-02-08 02:45: Added new branch decks for deck and card library build. Added __init__.py to lib to enable this library. Added blank decks.py for the new library file.
+
+2020-02-08 04:40: Added license to decks.py. Added preable for libraries, and imports for Deck and Card. Added preamble for AbstractCard class.
