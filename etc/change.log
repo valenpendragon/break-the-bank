@@ -2,4 +2,6 @@
 
 2020-02-08 02:45: Added new branch decks for deck and card library build. Added __init__.py to lib to enable this library. Added blank decks.py for the new library file.
 
-2020-02-08 04:40: Added license to decks.py. Added preable for libraries, and imports for Deck and Card. Added preamble for AbstractCard class.
+2020-02-08 04:40: Added license to decks.py. Added preamble for libraries, and imports for Deck and Card. Added preamble for AbstractCard class.
+
+2020-02-08 14:xx: For class AbstractCard, completed __init__(), __str__(), and abstractmethod __repr__(). For classes Ace, FaceCard, and NumberCard, completed __init__(), __str__(), and __repr__(). Fully tested each class. No diagnostic printouts alternates for __str__() functions at this time.
