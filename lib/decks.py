@@ -24,10 +24,12 @@ classes in this library:
         SubClass NumberCard: Stores cards with numberical values on the face
             that match the card's score value 
     
-    Class Deck: Object containing 52 cards, randomly shuffled with extra
-        entropy
-        SubClass CardShoe: A multideck shoe (2-8 decks) also fully shuffled
-            with extra entropy.
+    Class AbstractDeck: Object containing 52 cards, randomly shuffled with
+        extra entropy. Note: Even with extra entropy, this is only random
+        enough for a video game, not actual gambling.
+        SubClass StdDeck: A single deck implementation of AbstractDeck
+        SubClass CardShoe: A multideck shoe (1-8 decks) implementation of 
+            AbstactDeck
 
 Both classes require Abstract Base Class. The Deck class requires the
 random package in addition.
@@ -47,6 +49,8 @@ class AbstractCard(ABC):
             invoke this wits super().
         __str__ : returns string 'rank-suit'. Subclasses invoke with super().
         __repr__: abstractmethod only
+        __set__: override to raise AttributeError to make class attributes
+            immutable once initialized
 
     Attributes:
         self.rank: This is the rank of the card. Valid values are found in
@@ -94,7 +98,7 @@ class AbstractCard(ABC):
     @abstractmethod
     def __repr__(self):
         pass
-
+    
 class Ace(AbstractCard):
     """
     Usage: Ace(suit). This class uses the methods from AbstractCard and
@@ -196,3 +200,63 @@ class NumberCard(AbstractCard):
         """
         return 'NumberCard({rank}, {suit})'.format(rank=self.rank, 
                                                    suit=self.suit)
+
+class AbstractDeck(ABC, list):
+    """
+    This class sets up the methods used to shuffle decks of cards that can
+    contain more than one deck. The deck is composed of 52 Cards in the
+    following numbers:
+        4 Aces, 1 in each suit
+        36 NumberCards, 9 for each suit
+        12 FaceCards, 3 for each suit
+        There are no jokers in Blackjack
+    
+    Methods:
+        __init__: returns a shuffled deck of 52 cards as a list with extra
+            a few extra methods. Takes no arguments.
+        __str__: returns the string "The deck has {length} cards remaining.",
+            where length is determined by the list len function.
+        __repr__: returns 'AbstractDeck()'.
+        Note: use AD.remove() to get the top card.
+    
+    Attributes:
+        size: original size of this deck.
+        
+    """
+    # Constants
+    RANKS = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K')
+    SUITS = ('S', 'D', 'H', 'C')
+    FACECARDS = ('J', 'Q', 'K')
+    NUMBERCARDS = ('2', '3', '4', '5', '6', '7', '8', '9', '10')
+    
+    # Methods:
+    def __init__(self):
+        """
+        This method generates a 52-card deck of Card objects that has been
+        shuffled using rd.randint and rd.shuffle to create it. This process
+        introduces extra entropy, but not enough for gambling purposes.
+        INPUTS: none
+        OUTPUTS: Deck object containing 52 Card objects.
+        """
+        List.__init__(self)
+        self.size = 52
+        # Next, we build the unshuffled deck
+        deck = []
+        for suit in SUITS:
+            for rank in SUITS:
+                if rank == 'A':
+                    card = Ace(suit)
+                elif rank in NUMBERCARDS:
+                    card = NumberCard(rank, suit)
+                else:
+                    card = FaceCard(rank, suit)
+                deck.append(card)
+        
+        rd.shuffle(deck)
+        # Now, we add the extra entropy by using randint to pull the cards out
+        # of deck and put them into AbstractDeck.
+        self = []
+        while len(deck) > 0:
+            next_card = deck.pop(rd.randint(0, len(deck) - 1))
+            self.append(next_card)
+        

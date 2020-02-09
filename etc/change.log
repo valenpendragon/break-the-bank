@@ -5,3 +5,5 @@
 2020-02-08 04:40: Added license to decks.py. Added preamble for libraries, and imports for Deck and Card. Added preamble for AbstractCard class.
 
 2020-02-08 14:xx: For class AbstractCard, completed __init__(), __str__(), and abstractmethod __repr__(). For classes Ace, FaceCard, and NumberCard, completed __init__(), __str__(), and __repr__(). Fully tested each class. No diagnostic printouts alternates for __str__() functions at this time.
+
+2020-02-09 03:xx: Added AbstractDeck class and its __init__() method. No testing done. Did some research on making immutable classes, but could not find the right logic to ensure initialization of attributes would work. So, card class objects are not immutable.
