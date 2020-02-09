@@ -49,8 +49,6 @@ class AbstractCard(ABC):
             invoke this wits super().
         __str__ : returns string 'rank-suit'. Subclasses invoke with super().
         __repr__: abstractmethod only
-        __set__: override to raise AttributeError to make class attributes
-            immutable once initialized
 
     Attributes:
         self.rank: This is the rank of the card. Valid values are found in
@@ -214,10 +212,12 @@ class AbstractDeck(ABC, list):
     Methods:
         __init__: returns a shuffled deck of 52 cards as a list with extra
             a few extra methods. Takes no arguments.
-        __str__: returns the string "The deck has {length} cards remaining.",
-            where length is determined by the list len function.
-        __repr__: returns 'AbstractDeck()'.
-        Note: use AD.remove() to get the top card.
+        __str__: inherited from list
+        __repr__: inherited frorm list
+        remove_top: synonym for pop(0)
+        remaining_cards: returns a string showing number of cards out of
+            self.size that remain
+        Note: __len__ is inherited from List.
     
     Attributes:
         size: original size of this deck.
@@ -238,25 +238,35 @@ class AbstractDeck(ABC, list):
         INPUTS: none
         OUTPUTS: Deck object containing 52 Card objects.
         """
-        List.__init__(self)
+        list.__init__(self)
         self.size = 52
         # Next, we build the unshuffled deck
-        deck = []
-        for suit in SUITS:
-            for rank in SUITS:
+        # deck = []
+        for suit in self.SUITS:
+            for rank in self.RANKS:
                 if rank == 'A':
                     card = Ace(suit)
-                elif rank in NUMBERCARDS:
+                elif rank in self.NUMBERCARDS:
                     card = NumberCard(rank, suit)
                 else:
                     card = FaceCard(rank, suit)
-                deck.append(card)
-        
-        rd.shuffle(deck)
-        # Now, we add the extra entropy by using randint to pull the cards out
-        # of deck and put them into AbstractDeck.
-        self = []
-        while len(deck) > 0:
-            next_card = deck.pop(rd.randint(0, len(deck) - 1))
-            self.append(next_card)
-        
+                # deck.append(card)
+                self.append(card)
+        rd.shuffle(self)
+        # Now, we add extra entropy by using randint to do additional
+        # reshuffles.
+        for i in range(rd.randint(0, self.size)):
+            rd.shuffle(self)
+
+    def remove_top(self):
+        """
+        Removes the top card from a Deck object and returns this Card.
+        """
+        return self.pop(0)
+
+    def remaining_cards(self):
+        """
+        Returns a string with len(self) cards remain of self.size
+        """
+        return "{current_size} of {orig_size} cards remain".format(
+            current_size=len(self), orig_size=self.size)
