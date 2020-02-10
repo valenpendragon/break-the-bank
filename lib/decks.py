@@ -15,34 +15,40 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-This is the class library for Deck and Card classes.  There are a number of 
+This is the class library for Deck and Card classes.  There are a number of
 classes in this library:
 
     Class AbstractCard: Abstract card class
         SubClass Ace: Store aces and their second value
         SubClass FaceCard: Stores face cards with their constant value of 10
         SubClass NumberCard: Stores cards with numberical values on the face
-            that match the card's score value 
-    
+            that match the card's score value
+
     Class AbstractDeck: Object containing 52 cards, randomly shuffled with
         extra entropy. Note: Even with extra entropy, this is only random
         enough for a video game, not actual gambling.
         SubClass StdDeck: A single deck implementation of AbstractDeck
-        SubClass CardShoe: A multideck shoe (1-8 decks) implementation of 
-            AbstactDeck
+        SubClass CardShoe: A multideck card dealing shoe (1-8 decks)
+            implementation of AbstactDeck
 
 Both classes require Abstract Base Class. The Deck class requires the
 random package in addition.
 """
 
 import random as rd
-from abc import ABC, abstractmethod, abstractstaticmethod
+from abc import ABC, abstractmethod
+
 
 class AbstractCard(ABC):
     """
-    This class sets up how cards are initialized.
+    AbstractCard(rank, suit) requires two arguments and creates this object.
 
-    Methods:
+    Should be used as a base class to create specific card types, such
+    NumberCard, FaceCard, Ace, WildCard, etc. Some of these basic card types
+    are included as subclasses.
+
+    Methods
+    -------
         __init__: Puts the rank and suit into the correct attributes, value
             is handled in the subclasses. Valid rank and suit checkes are
             made and will raise ValueError if incorrect. Subclasses should
@@ -50,7 +56,8 @@ class AbstractCard(ABC):
         __str__ : returns string 'rank-suit'. Subclasses invoke with super().
         __repr__: abstractmethod only
 
-    Attributes:
+    Attributes
+    ----------
         self.rank: This is the rank of the card. Valid values are found in
             RANKS constant.
         self.suit: This is the card suit (Spades, Diamonds, Hearts, Clubs),
@@ -58,6 +65,7 @@ class AbstractCard(ABC):
             Valid values are in SUITS constant.
         self.value: Initialized by subclasses only.
     """
+
     # Constants:
     RANKS = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K')
     SUITS = ('S', 'D', 'H', 'C')
@@ -67,10 +75,12 @@ class AbstractCard(ABC):
     # Methods
     def __init__(self, rank, suit):
         """
-        Usage: AbstractCard(rank, suit). This method will validate the rank
-        and suit against constants RANKS and SUITS from the class. The
-        card's value as part of a hand is left to subclasses. Invoke this
-        abstract base class method via super() method.
+        Usage: AbstractCard(rank, suit) to instantiate a basic card object.
+
+        This method will validate the rank and suit against constants RANKS
+        and SUITS from the class. The card's value as part of a hand is left
+        to subclasses. Invoke this abstract base class method via super()
+        method to use its code.
         INPUTS: two strings, rank and suit
         OUTPUTS: none outside of creating the card object
         """
@@ -88,61 +98,69 @@ class AbstractCard(ABC):
         self.value = None
 
     def __str__(self):
-        """
-        Returns a three character string '{rank}-{suit}'
-        """
-        return "{rank}-{suit} ".format(rank=self.rank, suit=self.suit)
+        """Return a three character string '{rank}-{suit}'."""
+        return f"{self.rank}-{self.suit}"
 
     @abstractmethod
     def __repr__(self):
+        """Method left to subclasses. This is an abstractmethod."""
         pass
-    
+
+
 class Ace(AbstractCard):
     """
-    Usage: Ace(suit). This class uses the methods from AbstractCard and
-    adds an extra attribute, high_value, to this object. It only requires
-    a suit.
+    Usage: Ace(suit). Returns a object.
+
+    This class uses the methods from AbstractCard and adds an extra attribute,
+    high_value, to this object. Unlike other card objects, it only requires a
+    suit as an argument.
     """
 
     # Methods
     def __init__(self, suit):
         """
-        Usage: Ace(suit). This method calls super().__init__() to run
-        checks on the suit and set the rank and suit.
+        Usage: Ace(suit).
+
+        This method calls super().__init__() to run checks on the suit and
+        set the rank and suit.
         INPUT: one string, suit
-        OUTPUTS: none
+        OUTPUTS: Card object
         """
         super().__init__(rank='A', suit=suit)
         self.value = 1
         self.high_value = 11
-    
+
     def __str__(self):
-        """
-        Returns a three character string 'A-{suit}'.
-        """
+        """Return a three character string 'A-{suit}'."""
         output = super().__str__()
         return output
 
     def __repr__(self):
-        """
-        Returns the class call.
-        """
-        return 'Ace({suit})'.format(suit=self.suit)
+        """Return a string of the class call."""
+        return f"Ace({self.suit})"
+
 
 class FaceCard(AbstractCard):
     """
-    Usage: FaceCard(rank, suit). This class uses the methods from AbstractCard
-    without adding any additional attributes.
+    Usage: FaceCard(rank, suit). Keeps Card.value a constant for all objects.
+
+    This class uses the methods from AbstractCard without adding any
+    additional attributes.
     """
+
     # All face cards have a value of 10 in Blackjack.
     CARDVALUE = 10
 
     # Methods
     def __init__(self, rank, suit):
         """
-        Usage: FaceCard(rank, suit). This method calls super().__init__() to
-        run checks on the suit and set the rank and suit. It then sets the
-        value attribute.
+        Usage: FaceCard(rank, suit).
+
+        This method calls super().__init__() to run checks on the suit and
+        set the rank and suit. It then sets the value attribute to constant
+        CARDVALUE for this object type.
+        INPUTS: strings, rank and suit
+        OUTPUTS: Card object
         """
         if rank not in self.FACECARDS:
             print(f"FaceCard: An invalid rank was supplied {rank}.")
@@ -150,33 +168,34 @@ class FaceCard(AbstractCard):
             return None
         super().__init__(rank=rank, suit=suit)
         self.value = self.CARDVALUE
-    
+
     def __str__(self):
-        """
-        Returns a three character string '{rank}-{suit}'.
-        """
+        """Return a three character string '{rank}-{suit}'."""
         output = super().__str__()
         return output
 
     def __repr__(self):
-        """
-        Returns the class call.
-        """
-        return 'FaceCard({rank}, {suit})'.format(rank=self.rank, 
-                                                   suit=self.suit)
+        """Return a string of the class call."""
+        return f"FaceCard({self.rank}, {self.suit})"
+
 
 class NumberCard(AbstractCard):
     """
-    Usage: NumberCard(rank, suit). This class uses the methods from
-    AbstractCard without adding any additional attributes.
+    Usage: NumberCard(rank, suit). These cards have numbers on the face.
+
+    This class uses the methods from AbstractCard without adding any
+    additional attributes.
     """
-    
+
     # Methods
     def __init__(self, rank, suit):
         """
-        Usage: NumberCard(rank, suit). This method calls super().__init__() to
-        run checks on the suit and set the rank and suit. It then sets the
-        value attribute.
+        Usage: NumberCard(rank, suit).
+
+        This method calls super().__init__() to run checks on the suit and
+        set the rank and suit. It then sets the value attribute.
+        INPUTS: strings, rank and suit
+        OUTPUTS: Card object
         """
         if rank not in self.NUMBERCARDS:
             print(f"NumberCard: An invalid rank was supplied {rank}.")
@@ -184,23 +203,21 @@ class NumberCard(AbstractCard):
             return None
         super().__init__(rank=rank, suit=suit)
         self.value = int(self.rank)
-    
+
     def __str__(self):
-        """
-        Returns a three character string '{rank}-{suit}'.
-        """
+        """Return a three character string '{rank}-{suit}'."""
         output = super().__str__()
         return output
 
     def __repr__(self):
-        """
-        Returns the class call.
-        """
-        return 'NumberCard({rank}, {suit})'.format(rank=self.rank, 
-                                                   suit=self.suit)
+        """Returns a string of the class call."""
+        return f"NumberCard({self.rank}, {self.suit})"
 
-class AbstractDeck(ABC, list):
+
+class AbstractDeck(list, ABC):
     """
+    AbstractDeck(**kwrds), kwrds include num_decks=1 (optional)
+
     This class sets up the methods used to shuffle decks of cards that can
     contain more than one deck. The deck is composed of 52 Cards in the
     following numbers:
@@ -208,8 +225,9 @@ class AbstractDeck(ABC, list):
         36 NumberCards, 9 for each suit
         12 FaceCards, 3 for each suit
         There are no jokers in Blackjack
-    
-    Methods:
+
+    Methods
+    -------
         __init__: returns a shuffled deck of 52 cards as a list with extra
             a few extra methods. Takes no arguments.
         __str__: inherited from list
@@ -218,40 +236,47 @@ class AbstractDeck(ABC, list):
         remaining_cards: returns a string showing number of cards out of
             self.size that remain
         Note: __len__ is inherited from List.
-    
-    Attributes:
+
+    Attributes
+    ----------
         size: original size of this deck.
-        
     """
+
     # Constants
     RANKS = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K')
     SUITS = ('S', 'D', 'H', 'C')
     FACECARDS = ('J', 'Q', 'K')
     NUMBERCARDS = ('2', '3', '4', '5', '6', '7', '8', '9', '10')
-    
+
     # Methods:
-    def __init__(self):
+    def __init__(self, **kwrds):
         """
+        AbstractDeck(**kwrds), kwrds include num_decks=1 (optional)
+
         This method generates a 52-card deck of Card objects that has been
         shuffled using rd.randint and rd.shuffle to create it. This process
         introduces extra entropy, but not enough for gambling purposes.
-        INPUTS: none
+        INPUTS: **kwrds: num_decks, integer (optional), default=1
         OUTPUTS: Deck object containing 52 Card objects.
         """
-        list.__init__(self)
-        self.size = 52
+        super().__init__(self)
+        num_decks = 1
+        # Checking keywords (kwrds)
+        if 'num_decks' in kwrds:
+            num_decks = kwrds['num_decks']
+        self.size = 52 * num_decks
         # Next, we build the unshuffled deck
-        # deck = []
-        for suit in self.SUITS:
-            for rank in self.RANKS:
-                if rank == 'A':
-                    card = Ace(suit)
-                elif rank in self.NUMBERCARDS:
-                    card = NumberCard(rank, suit)
-                else:
-                    card = FaceCard(rank, suit)
-                # deck.append(card)
-                self.append(card)
+        for i in range(num_decks):
+            for suit in self.SUITS:
+                for rank in self.RANKS:
+                    if rank == 'A':
+                        card = Ace(suit)
+                    elif rank in self.NUMBERCARDS:
+                        card = NumberCard(rank, suit)
+                    else:
+                        card = FaceCard(rank, suit)
+                    # deck.append(card)
+                    self.append(card)
         rd.shuffle(self)
         # Now, we add extra entropy by using randint to do additional
         # reshuffles.
@@ -259,14 +284,71 @@ class AbstractDeck(ABC, list):
             rd.shuffle(self)
 
     def remove_top(self):
-        """
-        Removes the top card from a Deck object and returns this Card.
-        """
+        """Remove the top card from a Deck object and returns this Card."""
         return self.pop(0)
 
     def remaining_cards(self):
+        """Return a string with len(self) cards remain of self.size."""
+        return f"{len(self)} of {self.size} cards remain"
+
+
+class StdDeck(AbstractDeck, list, ABC):
+    """Uses AbstractDeck to create a single 52 card deck."""
+
+    def __init__(self, **kwrds):
         """
-        Returns a string with len(self) cards remain of self.size
+        Initialize a 52 card deck for blackjack.
+
+        INPUTS: none. Optional integer, num_decks in keywords (not used)
+        OUTPUTS: Deck object containing 52 Card objects.
         """
-        return "{current_size} of {orig_size} cards remain".format(
-            current_size=len(self), orig_size=self.size)
+        # Standard decks have exactly 52 cards. We need to override a keyword
+        # changing that.
+        kwrds['num_decks'] = 1
+        super().__init__(**kwrds)
+
+    def remove_top(self):
+        """Remove the top card from a Deck object and returns this card."""
+        return super().remove_top()
+
+    def remaining_cards(self):
+        """Return a string with len(self) cards remain of self.size."""
+        return super().remaining_cards()
+
+
+class CardShoe(AbstractDeck, list, ABC):
+    """
+    CardShoe(**kwrds), kwrds include num_decks=6 (optional).
+
+    Deck mimics the behavior of a multideck card dealing shoe. Contains
+    multiples of 52-card decks with AbstractDeck behavior. The number of
+    multiples is any integer greater than zero. The number of decks is
+    included in keyward arguments to this class. The default of 6 is in line
+    with the size most casinos use at regular blackjack tables.
+    INPUTS: integer num_decks (optional), default 6
+    OUTPUTS: Deck object
+    """
+
+    def __init__(self, **kwrds):
+        """
+        Create a multideck card dealing shoe with AbstractDeck behavior.
+
+        Deck will contain multiples of 52 card decks before being shuffled
+        a minimum of twice and a maximum of number of cards in the shoe.
+        INPUTS: **kwrds (optional). num_decks, integer (default=6)
+        OUTPUTS: Deck object of size num_decks * 52
+        """
+        # We need to get the higher default ready before passing kwrds to
+        # the parent __init__.
+        num_decks = 6
+        if 'num_decks' not in kwrds:
+            kwrds['num_decks'] = num_decks
+        super().__init__(**kwrds)
+
+    def remove_top(self):
+        """Remove the top card from a Deck object and returns this card."""
+        return super().remove_top()
+
+    def remaining_cards(self):
+        """Return a string with len(self) cards remain of self.size."""
+        return super().remaining_cards()

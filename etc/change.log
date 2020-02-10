@@ -9,3 +9,5 @@
 2020-02-09 03:xx: Added AbstractDeck class and its __init__() method. No testing done. Did some research on making immutable classes, but could not find the right logic to ensure initialization of attributes would work. So, card class objects are not immutable.
 
 2020-02-09 07:20: Added to AbstractDeck class remove_top() and remaining_cards() methods. Fully tested this abstract base class and its methods. It seems to work properly.
+
+2020-02-09 07:50: Fixed a problem with AbstractDeck.__init__() that now allows it to do decks of arbitrary multiples of 52. Corrected the problems with keyword arguments moving between parent classes in AbstractDeck and StdDeck. Cleaned up a number of style issues in the content the Spyder complained about. All methods for StdDeck and AbstractDeck work properly, including Deck.append() and repr(). In the Card classes, converted string outputs into f formatted strings. CardShoe and the methods __init__(), remove_top(), and remaining_cards() have been created and tested. A need to be able to order Cards in some fashion has shown some value for sorting Decks, since Decks inherit in place the in-place sort() method.
