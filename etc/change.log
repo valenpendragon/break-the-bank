@@ -15,3 +15,5 @@
 2020-02-10 09:10: Card.__eq__(), Card.__lt__(), and Card.__le__() built for AbstractCard, Ace, FaceCard, and NumberCard object. Using AbstractCard makes it possible to sort any Card type correctly. It ws tested on CardShoe objects since Deck objects are based on lists. I could order them rank and suit (note SUITS is actually in reverse order). It was possible to reverse the order as well. Having card orderable means that it is possible to determine winners in Blackjack when Human players pit their teams against each other. In those instances, decks are at most 2 standard decks in size and it matters who has the higher hands when more than one team player has 'blackjack', but none of the hands have Jacks. It also makes ties less likely to occur period.
 
 2020-02-10 10:05: Completed merge of branch decks into master, removed this branch locally and remotely and pushed the new master to GitHub.
+
+2020-02-10 10:20: Started branch (local and GitHub) hands to manage development of the classes for hands. A blank hands.py  with only the license.txt has been created for this new activity.
