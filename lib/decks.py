@@ -106,6 +106,52 @@ class AbstractCard(ABC):
         """Method left to subclasses. This is an abstractmethod."""
         pass
 
+    def __eq__(self, other):
+        """
+        Set the criteria for determining if 2 Cards are equal.
+
+        Two Cards are considered equal if their ranks and suits match.
+        """
+        if (self.rank, self.suit) == (other.rank, other.suit):
+            return True
+        else:
+            return False
+
+    def __lt__(self, other):
+        """
+        Set the criteria for sorting one card before another different card.
+
+        Sets the criteria of sorting cards first by rank, with the order
+        determined by index in the constant RANKS. If the ranks are equal,
+        the suits are compared, this time in reverse order, using SUITS.
+        """
+        # Eliminate equivalence first.
+        if self == other:
+            return False
+        # Casting RANKS and SUITS as lists allows us to use the index() method
+        # to determine their order. Since Spades is considered the highest
+        # ranking suit, we need to reverse the order of SUITS.
+        ranks = list(self.RANKS)
+        suits = list(self.SUITS)
+        suits.reverse()
+        if ranks.index(self.rank) < ranks.index(other.rank):
+            return True
+        elif (self.rank == other.rank and
+              suits.index(self.suit) < suits.index(other.suit)):
+            return True
+        else:
+            return False
+
+    def __le__(self, other):
+        """
+        Set the criteria for less than or equal to for Card objects.
+
+        This is the last boolean we need to set to establish a clear order
+        for Card objects. This can be used to apply these classes to other
+        games besides Blackjack.
+        """
+        return self.__eq__(other) or self.__lt__(other)
+
 
 class Ace(AbstractCard):
     """
@@ -138,6 +184,34 @@ class Ace(AbstractCard):
     def __repr__(self):
         """Return a string of the class call."""
         return f"Ace({self.suit})"
+
+    def __eq__(self, other):
+        """
+        Set the criteria for determining if 2 Cards are equal.
+
+        Two Cards are considered equal if their ranks and suits match.
+        """
+        return super().__eq__(other)
+
+    def __lt__(self, other):
+        """
+        Set the criteria for sorting one card before another different card.
+
+        Sets the criteria of sorting cards first by rank, then suit in the
+        order that they appear in the RANKS and SUITS constants. This applies
+        only to Card objects.
+        """
+        return super().__lt__(other)
+
+    def __le__(self, other):
+        """
+        Set the criteria for less than or equal to for Card objects.
+
+        This is the last boolean we need to set to establish a clear order
+        for Card objects. This can be used to apply these classes to other
+        games besides Blackjack.
+        """
+        return super().__le__(other)
 
 
 class FaceCard(AbstractCard):
@@ -178,6 +252,34 @@ class FaceCard(AbstractCard):
         """Return a string of the class call."""
         return f"FaceCard({self.rank}, {self.suit})"
 
+    def __eq__(self, other):
+        """
+        Set the criteria for determining if 2 Cards are equal.
+
+        Two Cards are considered equal if their ranks and suits match.
+        """
+        return super().__eq__(other)
+
+    def __lt__(self, other):
+        """
+        Set the criteria for sorting one card before another different card.
+
+        Sets the criteria of sorting cards first by rank, then suit in the
+        order that they appear in the RANKS and SUITS constants. This applies
+        only to Card objects.
+        """
+        return super().__lt__(other)
+
+    def __le__(self, other):
+        """
+        Set the criteria for less than or equal to for Card objects.
+
+        This is the last boolean we need to set to establish a clear order
+        for Card objects. This can be used to apply these classes to other
+        games besides Blackjack.
+        """
+        return super().__le__(other)
+
 
 class NumberCard(AbstractCard):
     """
@@ -210,13 +312,41 @@ class NumberCard(AbstractCard):
         return output
 
     def __repr__(self):
-        """Returns a string of the class call."""
+        """Return a string of the class call."""
         return f"NumberCard({self.rank}, {self.suit})"
+
+    def __eq__(self, other):
+        """
+        Set the criteria for determining if 2 Cards are equal.
+
+        Two Cards are considered equal if their ranks and suits match.
+        """
+        return super().__eq__(other)
+
+    def __lt__(self, other):
+        """
+        Set the criteria for sorting one card before another different card.
+
+        Sets the criteria of sorting cards first by rank, then suit in the
+        order that they appear in the RANKS and SUITS constants. This applies
+        only to Card objects.
+        """
+        return super().__lt__(other)
+
+    def __le__(self, other):
+        """
+        Set the criteria for less than or equal to for Card objects.
+
+        This is the last boolean we need to set to establish a clear order
+        for Card objects. This can be used to apply these classes to other
+        games besides Blackjack.
+        """
+        return super().__le__(other)
 
 
 class AbstractDeck(list, ABC):
     """
-    AbstractDeck(**kwrds), kwrds include num_decks=1 (optional)
+    AbstractDeck(**kwrds), kwrds include num_decks=1 (optional).
 
     This class sets up the methods used to shuffle decks of cards that can
     contain more than one deck. The deck is composed of 52 Cards in the
@@ -251,7 +381,7 @@ class AbstractDeck(list, ABC):
     # Methods:
     def __init__(self, **kwrds):
         """
-        AbstractDeck(**kwrds), kwrds include num_decks=1 (optional)
+        AbstractDeck(**kwrds), kwrds include num_decks=1 (optional).
 
         This method generates a 52-card deck of Card objects that has been
         shuffled using rd.randint and rd.shuffle to create it. This process
