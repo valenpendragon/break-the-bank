@@ -17,3 +17,5 @@
 2020-02-10 10:05: Completed merge of branch decks into master, removed this branch locally and remotely and pushed the new master to GitHub.
 
 2020-02-10 10:20: Started branch (local and GitHub) hands to manage development of the classes for hands. A blank hands.py  with only the license.txt has been created for this new activity.
+
+2020-02-13 20:35: Created AbstractHand class with three attributes. This class is an abstract base class based on list. Created methods __init__(), print_score(), and receive_card(), but these methods have not been tested yet.
