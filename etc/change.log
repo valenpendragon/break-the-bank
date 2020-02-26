@@ -19,3 +19,5 @@
 2020-02-10 10:20: Started branch (local and GitHub) hands to manage development of the classes for hands. A blank hands.py  with only the license.txt has been created for this new activity.
 
 2020-02-13 20:35: Created AbstractHand class with three attributes. This class is an abstract base class based on list. Created methods __init__(), print_score(), and receive_card(), but these methods have not been tested yet.
+
+2020-02-26 04:00: Fixed AbstractHand.__str__() bad printouts for empty hands. AbstractHand.__init__() properly creates Hand objects. AbstractHand.receive_card() adds a card to the Hand and updates Hand.score, Hand.has_ace and Hand.busted correctly. Corrected an error with Hand.print_score() that incorrectly handled blackjack. Even though AbstractHand inherits from list, I may need to define __iter__ or __next__ to make it work properly, or a least use super() to get it.

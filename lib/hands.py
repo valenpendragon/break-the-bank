@@ -31,6 +31,7 @@ The classes in this library are:
             a pair from the original hand has been split into two hands.
         Subclass DealerHand: stores and models cards for the dealer's hand.
 """
+from abc import ABC, abstractmethod
 from decks import Ace
 from decks import FaceCard as FC
 from decks import NumberCard as NC
@@ -67,7 +68,7 @@ class AbstractHand(list, ABC):
             aces
 
     Attributes
-    ==========
+    ----------
         score: integer, score of the hand without accounting for aces.
         has_ace: boolean, starts False, True if an ace was received by
             receive_card().
@@ -91,7 +92,6 @@ class AbstractHand(list, ABC):
         self.score = 0
         self.has_ace = False
         self.busted = False
-        return self
 
     def __str__(self):
         """
@@ -105,8 +105,17 @@ class AbstractHand(list, ABC):
             output = "Empty hand"
         else:
             output = "Hand contains: "
-            output = output.join([print(card, end=' ') for card in self])
-        output = output.join(['\n', "Hand score is: {self.print_score()}\n"])
+            while True:
+                try:
+                    card = super().next(self)
+                    if card is None:
+                        break
+                    else:
+                        output = output + print(card, end=' ')
+                except StopIteration:
+                    break
+        output = output + '\n'
+        output = output + f"Hand score is: {self.print_score()}"
         return output
 
     def receive_card(self, card):
@@ -141,7 +150,7 @@ class AbstractHand(list, ABC):
 
         """
         high_score = self.score + 10
-        if self.has_ace and high_score < 21:
+        if self.has_ace and high_score <= 21:
             return high_score
         else:
             return self.score
